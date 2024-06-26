@@ -1,0 +1,13 @@
+<resources>
+    <string name="Analysis">분석</string>
+    <string name="expression">수식</string>
+    <string name="result">결과</string>
+    <string name="add">추가</string>
+    <string name="allDelete">AC</string>
+    <string name="Delete">C</string>
+    <string name="equals">=</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="multiply">x</string>
+    <string name="devide">/</string>
+</resources>

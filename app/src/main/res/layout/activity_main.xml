@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/back1">
+
+    <!-- First row of buttons -->
+    <LinearLayout
+        android:id="@+id/first_row"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnOpenCalculator"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="계산기"
+            android:textSize="20sp"
+            android:backgroundTint="#00D5E4FF"
+            android:layout_marginTop="150dp"
+            android:textColor="#518700FF"/>
+
+        <Button
+            android:id="@+id/btnOpenExpense"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="가계부 작성"
+            android:textSize="20sp"
+            android:backgroundTint="#00D5E4FF"
+            android:textColor="#518700FF"/>
+
+        <Button
+            android:id="@+id/btnSelectMonth"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="이달의 비용"
+            android:textSize="20sp"
+            android:backgroundTint="#00D5E4FF"
+            android:textColor="#518700FF"/>
+
+        <Button
+            android:id="@+id/btnFortune"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="운세"
+            android:textSize="20sp"
+            android:backgroundTint="#00D5E4FF"
+            android:textColor="#518700FF"/>
+
+        <Button
+            android:id="@+id/btnYearlyExpenses"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:text="연간 소비량"
+            android:textSize="20sp"
+            android:backgroundTint="#00D5E4FF"
+            android:textColor="#518700FF"/>
+    </LinearLayout>
+    <!-- Last small button -->
+    <Button
+        android:id="@+id/btnSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="#000000"
+        android:padding="8dp"
+        android:text="설정"
+        android:textColor="#FFFFFF" />
+
+</LinearLayout>

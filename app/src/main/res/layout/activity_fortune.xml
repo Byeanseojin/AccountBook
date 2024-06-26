@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+        <Button
+            android:id="@+id/btnHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FFBCE0"
+            android:text="Home" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <Button
+            android:id="@+id/button_get_fortune"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="운세 보기"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FFBCE0"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/text_fortune"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="여기에 오늘의 운세가 표시됩니다"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/image_fortune"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+</LinearLayout>
