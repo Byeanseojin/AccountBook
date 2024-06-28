@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class ExpenseSummaryHelper(private val database: SQLiteDatabase) {
+class ExpenseHelper(private val database: SQLiteDatabase) {
 
     fun calculateTotalExpensesForMonth(month: String): Double {
         var total = 0.0
