@@ -16,6 +16,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val sharedPreferences = getSharedPreferences("user_settings", MODE_PRIVATE)
+        val userName = sharedPreferences.getString("user_name", "사용자")
+        val goalAmount = sharedPreferences.getFloat("goal_amount", 0.0f)
+
+        binding.tvUserGoal.text = "$userName" + "의 이번달 목표금액\n"+"❣"+ "${goalAmount.toInt()}원❣"
+
         binding.btnOpenCalculator.setOnClickListener {
             val intent = Intent(this, CalculatorActivity::class.java)
             startActivity(intent)
@@ -36,9 +42,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnYearlyExpenses.setOnClickListener {
-            val selectedYear = SimpleDateFormat("yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-            val intent = Intent(this, YearlyExpensesActivity::class.java)
-            intent.putExtra("SELECTED_YEAR", selectedYear)
+            showYearPicker()
+        }
+
+        binding.btnDailyExpenses.setOnClickListener {
+            val intent = Intent(this, DailyExpensesActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.btnSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
     }
@@ -55,5 +68,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
         dialog.show(supportFragmentManager, "MonthYearPickerDialog")
+    }
+
+    private fun showYearPicker() {
+        val dialog = YearPickerDialog()
+        dialog.setListener { year ->
+            val intent = Intent(this, YearlyExpensesActivity::class.java)
+            intent.putExtra("SELECTED_YEAR", year.toString())
+            startActivity(intent)
+        }
+        dialog.show(supportFragmentManager, "YearPickerDialog")
     }
 }
