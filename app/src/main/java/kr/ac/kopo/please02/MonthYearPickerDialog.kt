@@ -33,17 +33,17 @@ class MonthYearPickerDialog : DialogFragment() {
         binding.pickerMonth.value = currentMonth
 
         binding.pickerMonth.displayedValues = arrayOf(
-            "January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
+            "1", "2", "3", "4", "5", "6",
+            "7", "8", "9", "10", "11", "12"
         )
 
         return AlertDialog.Builder(requireContext())
-            .setTitle("Select Month and Year")
+            .setTitle("연도와 월을 입력하세요")
             .setView(binding.root)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton("확인") { _, _ ->
                 listener?.invoke(binding.pickerYear.value, binding.pickerMonth.value)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton("취소", null)
             .create()
     }
 }

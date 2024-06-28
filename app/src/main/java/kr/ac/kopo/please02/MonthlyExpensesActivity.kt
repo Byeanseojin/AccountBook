@@ -5,12 +5,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kr.ac.kopo.please02.databinding.ActivityMonthlyExpensesBinding
 import android.database.sqlite.SQLiteDatabase
+import androidx.appcompat.app.AlertDialog
 
 class MonthlyExpensesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMonthlyExpensesBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var database: SQLiteDatabase
-    private lateinit var expenseSummaryHelper: ExpenseSummaryHelper
+    private lateinit var expenseHelper: ExpenseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +20,7 @@ class MonthlyExpensesActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
         database = dbHelper.writableDatabase
-        expenseSummaryHelper = ExpenseSummaryHelper(database)
+        expenseHelper = ExpenseHelper(database)
 
         val selectedMonth = intent.getStringExtra("SELECTED_MONTH") ?: ""
         if (selectedMonth.isNotEmpty()) {
@@ -27,8 +28,7 @@ class MonthlyExpensesActivity : AppCompatActivity() {
             showExpensesForMonth(selectedMonth)
             showCategoryExpensesForMonth(selectedMonth)
         } else {
-            // Handle case when selectedMonth is empty
-            binding.tvMonth.text = "No month selected"
+            binding.tvMonth.text = "달이 선택되지 않았습니다"
         }
 
         binding.btnHome.setOnClickListener {
@@ -60,23 +60,43 @@ class MonthlyExpensesActivity : AppCompatActivity() {
         }
         cursor.close()
 
-        val adapter = ExpenseAdapter(this, expenses)
+        val adapter = ExpenseAdapter(this, expenses) { expense ->
+            confirmDelete(expense)
+        }
         binding.lvMonthlyExpenses.adapter = adapter
 
-        // Calculate and display total expenses for the month
-        val total = expenseSummaryHelper.calculateTotalExpensesForMonth(month)
-        binding.tvTotalExpenses.text = "총금액: $total"
+        val total = expenseHelper.calculateTotalExpensesForMonth(month).toInt()
+        binding.tvTotalExpenses.text = "총금액: $total"+"원"
 
-        // Calculate and display total expenses for the previous month
-        val previousTotal = expenseSummaryHelper.calculateTotalExpensesForPreviousMonth(month)
+        val previousTotal = expenseHelper.calculateTotalExpensesForPreviousMonth(month).toInt()
         val difference = total - previousTotal
-        binding.tvComparison.text = "지난달대비 ${if (difference >= 0) "+" else ""}$difference"
+        binding.tvComparison.text = "지난달대비 ${if (difference >= 0) "+" else ""}$difference"+"원"
+    }
+
+    private fun confirmDelete(expense: ExpenseActivity.Expense) {
+        AlertDialog.Builder(this)
+            .setMessage("이 항목을 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { dialog, _ ->
+                deleteExpense(expense.id)
+                dialog.dismiss()
+                val selectedMonth = intent.getStringExtra("SELECTED_MONTH") ?: ""
+                if (selectedMonth.isNotEmpty()) {
+                    showExpensesForMonth(selectedMonth)
+                    showCategoryExpensesForMonth(selectedMonth)
+                }
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    private fun deleteExpense(id: Long) {
+        database.delete(DatabaseHelper.TABLE_EXPENSES, "${DatabaseHelper.COLUMN_ID}=?", arrayOf(id.toString()))
     }
 
     private fun showCategoryExpensesForMonth(month: String) {
-        val categoryExpenses = expenseSummaryHelper.calculateCategoryExpensesForMonth(month)
+        val categoryExpenses = expenseHelper.calculateCategoryExpensesForMonth(month)
         val formattedExpenses = categoryExpenses.entries.joinToString("\n") {
-            "${it.key}: $${it.value}"
+            "${it.key}: ${it.value.toInt()}"+"원"
         }
         binding.tvCategoryExpenses.text = formattedExpenses
     }
