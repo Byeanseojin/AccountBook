@@ -10,7 +10,7 @@ class YearlyExpensesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityYearlyExpensesBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var database: SQLiteDatabase
-    private lateinit var expenseSummaryHelper: ExpenseSummaryHelper
+    private lateinit var expenseHelper: ExpenseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,7 +19,7 @@ class YearlyExpensesActivity : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
         database = dbHelper.writableDatabase
-        expenseSummaryHelper = ExpenseSummaryHelper(database)
+        expenseHelper = ExpenseHelper(database)
 
         val selectedYear = intent.getStringExtra("SELECTED_YEAR") ?: ""
 
@@ -33,9 +33,9 @@ class YearlyExpensesActivity : AppCompatActivity() {
 
     private fun showYearlySummary(year: String) {
         // Calculate and display total expenses for each month in the year
-        val monthlyExpenses = expenseSummaryHelper.calculateMonthlyExpensesForYear(year)
+        val monthlyExpenses = expenseHelper.calculateMonthlyExpensesForYear(year)
         binding.tvYearlyExpenses.text = monthlyExpenses.entries.joinToString("\n") {
-            "${it.key}: ${it.value}원"
+            "${it.key}: ${it.value.toInt()}원"
         }
     }
 }

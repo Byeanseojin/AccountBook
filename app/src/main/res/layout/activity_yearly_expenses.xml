@@ -14,13 +14,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#B4B6FF"
-            android:text="처음" />
+            android:text="홈" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textSize="20dp"
         android:text="연간 소비량"/>
 
     <TextView
@@ -30,5 +31,6 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:textSize="20sp"
+        android:background="#BABCF8"
         android:text="Yearly Expenses:" />
 </LinearLayout>
