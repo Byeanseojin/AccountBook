@@ -3,12 +3,13 @@ package kr.ac.kopo.please02
 import android.app.DatePickerDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kr.ac.kopo.please02.databinding.ActivityExpenseBinding
 import android.database.sqlite.SQLiteDatabase
 import android.content.ContentValues
 import android.content.Intent
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import kr.ac.kopo.please02.databinding.ActivityExpenseBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -17,7 +18,6 @@ class ExpenseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExpenseBinding
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var database: SQLiteDatabase
-    private val limit = 50000 // Example limit
     private var selectedDate: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +44,11 @@ class ExpenseActivity : AppCompatActivity() {
             val amount = binding.etAmount.text.toString().toDoubleOrNull() ?: 0.0
             val date = selectedDate ?: SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Calendar.getInstance().time)
 
+            if (category == "카테고리를 선택해주세요") {
+                Toast.makeText(this, "카테고리를 선택해주세요", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val values = ContentValues().apply {
                 put(DatabaseHelper.COLUMN_TITLE, title)
                 put(DatabaseHelper.COLUMN_CATEGORY, category)
@@ -53,7 +58,7 @@ class ExpenseActivity : AppCompatActivity() {
 
             val newRowId = database.insert(DatabaseHelper.TABLE_EXPENSES, null, values)
             if (newRowId != -1L) {
-                Toast.makeText(this, "Expense added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "추가 완료", Toast.LENGTH_SHORT).show()
                 updateExpenseList()
             } else {
                 Toast.makeText(this, "Error adding expense", Toast.LENGTH_SHORT).show()
@@ -72,6 +77,7 @@ class ExpenseActivity : AppCompatActivity() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         binding.spinnerCategory.adapter = adapter
+        binding.spinnerCategory.setSelection(0) // 초기 선택항목 설정
     }
 
     private fun showDatePicker() {
@@ -110,8 +116,26 @@ class ExpenseActivity : AppCompatActivity() {
         }
         cursor.close()
 
-        val adapter = ExpenseAdapter(this, expenses)
+        val adapter = ExpenseAdapter(this, expenses) { expense ->
+            confirmDelete(expense)
+        }
         binding.lvExpenses.adapter = adapter
+    }
+
+    private fun confirmDelete(expense: Expense) {
+        AlertDialog.Builder(this)
+            .setMessage("이 항목을 삭제하시겠습니까?")
+            .setPositiveButton("삭제") { dialog, _ ->
+                deleteExpense(expense.id)
+                dialog.dismiss()
+                updateExpenseList()
+            }
+            .setNegativeButton("취소", null)
+            .show()
+    }
+
+    private fun deleteExpense(id: Long) {
+        database.delete(DatabaseHelper.TABLE_EXPENSES, "${DatabaseHelper.COLUMN_ID}=?", arrayOf(id.toString()))
     }
 
     data class Expense(val id: Long, val title: String, val category: String, val amount: Double, val date: String)
